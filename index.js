@@ -13,9 +13,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Setup WhatsApp client with persistent auth
+// Setup WhatsApp client with persistent auth, specifying dataPath for Fly.io volume
 const client = new Client({
-  authStrategy: new LocalAuth()
+  authStrategy: new LocalAuth({
+    clientId: 'default',        // optional but useful if multiple clients
+    dataPath: '/wwebjs_data'    // must match Fly.io volume mount path
+  })
 });
 
 // Track unknown replies to prevent repeat fallback responses
