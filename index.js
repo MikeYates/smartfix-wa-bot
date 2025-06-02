@@ -2,17 +2,16 @@ require('dotenv').config();
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const express = require('express');
-const { Configuration, OpenAIApi } = require('openai');
 const moment = require('moment-timezone');
+const OpenAI = require('openai'); // NEW client for v4.104.0
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Setup OpenAI client
-const configuration = new Configuration({
+// Initialize OpenAI client
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 // Setup WhatsApp client with persistent auth
 const client = new Client({
@@ -80,13 +79,13 @@ Do not mention operating hours unless explicitly asked. If the user repeats a qu
       }
     ];
 
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages,
-      max_tokens: 200
+      max_tokens: 200,
     });
 
-    const answer = response.data.choices[0].message.content.trim();
+    const answer = response.choices[0].message.content.trim();
 
     if (
       answer.includes("our team will follow up") &&
