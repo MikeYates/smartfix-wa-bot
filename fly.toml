@@ -1,11 +1,14 @@
 app = 'smartfix-wa-bot'
 primary_region = 'sin'
 
+[build]
+  builder = "flyio/builder:latest"
+
 [http_service]
   internal_port = 8080
   force_https = true
   auto_start_machines = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true # Or 'off', or a duration like '10m'. 'true' means stop when idle based on metrics.
   min_machines_running = 0
   processes = ['app']
 
